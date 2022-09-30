@@ -2,11 +2,11 @@ from socket import *
 import socket
 import threading
 import logging
-import time
-import sys
 
 from file_protocol import  FileProtocol
 fp = FileProtocol()
+
+BUFFER_SIZE = 4096
 
 class ProcessTheClient(threading.Thread):
     def __init__(self, connection, address):
@@ -17,11 +17,12 @@ class ProcessTheClient(threading.Thread):
     def run(self):
         data_received = ''
         while True:
-            data = self.connection.recv(32)
+            data = self.connection.recv(BUFFER_SIZE)
+
             if data:
-                data_received += data.decode()   
+                data_received += data.decode()
                 
-                if data_received[-1:] == '\n':
+                if "\r\n\r\n" in data_received:
                     hasil = fp.proses_string(data_received.strip())
                     hasil=hasil+"\r\n\r\n"
                     self.connection.sendall(hasil.encode())
