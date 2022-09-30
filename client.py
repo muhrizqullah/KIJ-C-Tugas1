@@ -1,7 +1,6 @@
 import socket
 import json
 import base64
-import logging
 import shlex
 
 SERVER_ADDRESS = ('127.0.0.1', 6666)
@@ -9,7 +8,6 @@ BUFFER_SIZE = 4096
 
 
 def send_command(command_str=""):
-    global SERVER_ADDRESS
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(SERVER_ADDRESS)
 
@@ -29,7 +27,7 @@ def send_command(command_str=""):
 
         hasil = json.loads(data_received)
         return hasil
-    except:
+    except Exception:
         return False
 
 
@@ -134,6 +132,7 @@ if __name__ == '__main__':
     print("- download <filename>")
     print("- upload <filename>")
     print("- delete <filename>")
+    print("Note: surround filename with double quotes if it contains spaces")
 
     try:
         while True:
