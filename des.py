@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
     des = myDES(key, byte)
     enc, iv = des.encrypt()
+    print("iv: ", iv)
     print("enc: ", enc)
 
     b64sen = b64encode(enc).decode()
