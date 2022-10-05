@@ -11,7 +11,7 @@ from RC4 import RC4
 SERVER_ADDRESS = ('127.0.0.1', 6666)
 BUFFER_SIZE = 4096
 DES_KEY = b'inikunci'
-AES_KEY = b'kunciku'
+AES_KEY = b'kuncikuadalahini'
 DEFAULT_ENCRYPTION = "des"
 
 def send_command(command_str=""):

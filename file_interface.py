@@ -4,9 +4,11 @@ from base64 import b64decode, b64encode
 from glob import glob
 from client import encrypt
 from des import myDES
+from aes import myAES
 
 DES_KEY = b'inikunci'
 DEFAULT_ENCRYPTION = "des"
+AES_KEY = b'kuncikuadalahini'
 
 class FileInterface:
     def __init__(self):
@@ -58,9 +60,8 @@ class FileInterface:
         print("Encrypting... " , data)
 
         if (encryption == "aes"):
-            # enc = aes(key, data)
-            # encrypted_data = aes.encrypt
-            TODO
+            aes = myAES(AES_KEY, data.decode())
+            encrypted_data,iv = aes.encrypt()
 
         elif (encryption == "des"):
             des = myDES(DES_KEY, data)
@@ -80,9 +81,8 @@ class FileInterface:
         data = b64decode(data)
 
         if (encryption == "aes"):
-            # enc = aes(key, data)
-            # encrypted_data = aes.decrypt
-            TODO
+            aes = myAES(DES_KEY, data, iv)
+            decrypted_data = aes.decrypt()
 
         elif (encryption == "des"):
             des = myDES(DES_KEY, data, iv)

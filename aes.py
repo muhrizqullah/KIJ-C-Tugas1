@@ -20,7 +20,7 @@ class myAES:
         return pt
 
 if __name__ == '__main__':
-    key = get_random_bytes(16)
+    key = b'kuncikuadalahini'
     data = b'hello from other side hallo hi'
     aes=myAES(key,data)
     chipertext,iv=aes.encrypt()
