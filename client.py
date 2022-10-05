@@ -4,13 +4,14 @@ import base64
 from base64 import b64decode, b64encode
 import shlex
 
-from aes import aes
+from aes import myAES
 from des import myDES
 from RC4 import RC4
 
 SERVER_ADDRESS = ('127.0.0.1', 6666)
 BUFFER_SIZE = 4096
 DES_KEY = b'inikunci'
+AES_KEY = b'kunciku'
 DEFAULT_ENCRYPTION = "des"
 
 def send_command(command_str=""):
@@ -43,9 +44,9 @@ def encrypt(encryption, data):
     print("Encrypting... " , data)
 
     if (encryption == "aes"):
-        # enc = aes(key, data)
-        # encrypted_data = aes.encrypt
-        TODO
+        aes = myAES(AES_KEY, data.decode())
+        encrypted_data,iv = aes.encrypt()
+        
 
     elif (encryption == "des"):
         des = myDES(DES_KEY, data)
@@ -65,9 +66,8 @@ def decrypt(encryption, data, iv):
     data = b64decode(data)
 
     if (encryption == "aes"):
-        # enc = aes(key, data)
-        # encrypted_data = aes.decrypt
-        TODO
+        aes = myAES(DES_KEY, data, iv)
+        decrypted_data = aes.decrypt()
 
     elif (encryption == "des"):
         des = myDES(DES_KEY, data, iv)
@@ -171,7 +171,7 @@ def handle_command(command):
         elif command.lower() == "download":
             remote_get(rest[0])
         elif command.lower() == "upload":
-            remote_post(rest[0], rest[1])
+            remote_post(rest[0])
         elif command.lower() == "delete":
             remote_delete(rest[0])
         else:
