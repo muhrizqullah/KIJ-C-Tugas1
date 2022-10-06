@@ -117,7 +117,6 @@ def remote_get(filename=""):
 
 def remote_post(encryption, filename=""):
     data = ""
-
     try:
         with open(filename, 'rb') as fp:
             data = base64.b64encode(fp.read()).decode('utf-8')
@@ -173,7 +172,7 @@ def handle_command(command):
         elif command.lower() == "download":
             remote_get(rest[0])
         elif command.lower() == "upload":
-            remote_post(rest[0])
+            remote_post(rest[0], rest[1])
         elif command.lower() == "delete":
             remote_delete(rest[0])
         else:

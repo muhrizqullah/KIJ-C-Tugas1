@@ -37,10 +37,14 @@ class FileInterface:
         return dict(status='OK', filename=filename, data=data, iv=iv)
 
     def post(self, params=[]):
+        print(params, len(params))
         filename = params[0]
         data = params[1]
         encryption = params[2]
-        iv = params[3]
+        if len(params) > 3:
+            iv = params[3]
+        else:
+            iv = b''
 
         data = self.decrypt(encryption, data, iv)
 
