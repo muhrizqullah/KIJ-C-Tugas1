@@ -6,12 +6,13 @@ import shlex
 
 from aes import myAES
 from des import myDES
-from RC4 import RC4
+from rc4 import myRC4
 
 SERVER_ADDRESS = ('127.0.0.1', 6666)
 BUFFER_SIZE = 4096
 DES_KEY = b'inikunci'
 AES_KEY = b'kuncikuadalahini'
+RC4_KEY = b'kuncikuadatiga'
 DEFAULT_ENCRYPTION = "des"
 
 def send_command(command_str=""):
@@ -53,8 +54,8 @@ def encrypt(encryption, data):
         encrypted_data, iv = des.encrypt()
 
     elif (encryption == "rc4"):
-        # rc4 = RC4
-        TODO
+        rc4 = myRC4(RC4_KEY, data)
+        encrypted_data = rc4.encrypt()
 
     iv = b64encode(iv).decode()
     encrypted_data = b64encode(encrypted_data).decode()
@@ -74,8 +75,8 @@ def decrypt(encryption, data, iv):
         decrypted_data = des.decrypt()
 
     elif (encryption == "rc4"):
-        # rc4 = RC4
-        TODO
+        rc4 = myRC4(RC4_KEY, data)
+        decrypted_data = rc4.decrypt()
 
     return decrypted_data.decode()
 

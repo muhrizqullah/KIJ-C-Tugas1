@@ -5,10 +5,12 @@ from glob import glob
 from client import encrypt
 from des import myDES
 from aes import myAES
+from rc4 import myRC4
 
 DES_KEY = b'inikunci'
-DEFAULT_ENCRYPTION = "des"
 AES_KEY = b'kuncikuadalahini'
+RC4_KEY = b'kuncikuadatiga'
+DEFAULT_ENCRYPTION = "des"
 
 class FileInterface:
     def __init__(self):
@@ -68,8 +70,8 @@ class FileInterface:
             encrypted_data, iv = des.encrypt()
 
         elif (encryption == "rc4"):
-            # rc4 = RC4
-            TODO
+            rc4 = myRC4(RC4_KEY, data)
+            encrypted_data = rc4.encrypt()
 
         iv = b64encode(iv).decode()
         encrypted_data = b64encode(encrypted_data).decode()
@@ -89,8 +91,8 @@ class FileInterface:
             decrypted_data = des.decrypt()
 
         elif (encryption == "rc4"):
-            # rc4 = RC4
-            TODO
+            rc4 = myRC4(RC4_KEY, data)
+            decrypted_data = rc4.decrypt()
 
         return decrypted_data.decode()
 
