@@ -1,40 +1,44 @@
-MODULUS = 256
+from base64 import b64decode, b64encode
+from Crypto.Cipher import ARC4
 
-class RC4:
+
+class myRC4:
+    def __init__(self, key, data):
+        self.key = key
+        self.data = data
+        self.cipher = ARC4.new(self.key)
     
-    def initialisation(key):
-        key_length = len(key)
-        S = []
-        T = []
-        i = 0
-        
-        for i in range(MODULUS):
-            S.append(i)
-            if key_length < 256:
-                T.append(key[i % key_length])
-        return permutation(S, T)
+    def encrypt(self):
+        encrypted_data = self.cipher.encrypt(self.data)
+        return encrypted_data
     
-    def permutation(S, T):
-        j = 0
-        
-        for i in range(MODULUS):
-            j = (j + S[i] + T[i]) % MODULUS
-            S[i], S[j] = S[j], S[i]
-            
-        return S
-    
-    def PRNG(S):
-        i, j = 0
-        
-        while True:
-            i = (i + 1) % MODULUS
-            j = (j + S[i]) % MODULUS
-            
-            S[i], S[j] = S[j], S[i]
-            K = S[(S[i] + S[j]) % MOD]
-            yield K
-    
-    def getKeystream(key):
-        S = initialisation(key)
-        return PRNG(S)
-       
+    def decrypt(self):
+        decrypted_data = self.cipher.decrypt(self.data)
+        return decrypted_data
+
+if __name__ == '__main__':
+
+    key = b'akbars key'
+
+    str = "halo dunia apa kabar"
+    print("str: ", str)
+
+    byte = str.encode()
+    print("byte: ", byte)
+
+    rc4 = myRC4(key, byte)
+    enc= rc4.encrypt()
+    print("enc: ", enc)
+
+    b64sen = b64encode(enc).decode()
+    print("b64sent: ", b64sen)
+
+    byterec = b64decode(b64sen)
+    print("byterec = enc: ", byterec)
+
+    rc42 = myRC4(key, byterec)
+    dec = rc42.decrypt()
+    print("dec = byte: ", dec)
+
+    b64 = dec.decode()
+    print(b64)
