@@ -13,7 +13,7 @@ BUFFER_SIZE = 4096
 DES_KEY = b'inikunci'
 AES_KEY = b'kuncikuadalahini'
 RC4_KEY = b'kuncikuadatiga'
-DEFAULT_ENCRYPTION = "des"
+DEFAULT_ENCRYPTION = "rc4"
 
 def send_command(command_str=""):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,6 +41,7 @@ def send_command(command_str=""):
 
 def encrypt(encryption, data):
     encrypted_data = ""
+    iv = b''
     data = data.encode()
     print("Encrypting... " , data)
 

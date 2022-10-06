@@ -10,7 +10,7 @@ from rc4 import myRC4
 DES_KEY = b'inikunci'
 AES_KEY = b'kuncikuadalahini'
 RC4_KEY = b'kuncikuadatiga'
-DEFAULT_ENCRYPTION = "des"
+DEFAULT_ENCRYPTION = "rc4"
 
 class FileInterface:
     def __init__(self):
@@ -58,6 +58,7 @@ class FileInterface:
 
     def encrypt(self, encryption, data):
         encrypted_data = ""
+        iv = b''
         data = data.encode()
         print("Encrypting... " , data)
 
