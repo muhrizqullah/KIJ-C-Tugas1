@@ -27,6 +27,8 @@ class FileProtocol:
             return json.dumps(dict(status='ERROR', data='filename already exists on server'))
         except FileNotFoundError:
             return json.dumps(dict(status='ERROR', data='file not found on server'))
+        except ValueError:
+            return json.dumps(dict(status='ERROR', data='wrong parameter(s)'))
         except Exception as e:
             return json.dumps(dict(status='ERROR', data=str(e)))
 

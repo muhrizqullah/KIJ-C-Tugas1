@@ -128,8 +128,8 @@ def handle_command(command):
             remote_delete(rest[0])
         else:
             print("Error: unknown command")
-    except Exception as e:
-        print(f"Error: {e}")
+    except IndexError:
+        print(f"Error: Some parameters are missing")
 
 
 if __name__ == '__main__':

@@ -15,9 +15,8 @@ def encrypt(encryption, data):
     print("Encrypting... " , data)
 
     if (encryption == "aes"):
-        aes = myAES(AES_KEY, data.decode())
-        encrypted_data,iv = aes.encrypt()
-        
+        aes = myAES(AES_KEY, data)
+        encrypted_data, iv = aes.encrypt()
 
     elif (encryption == "des"):
         des = myDES(DES_KEY, data)
@@ -28,7 +27,7 @@ def encrypt(encryption, data):
         encrypted_data = rc4.encrypt()
 
     else:
-        raise Exception("Unknown encryption")
+        raise ValueError("Unknown encryption method")
 
     iv = b64encode(iv).decode()
     encrypted_data = b64encode(encrypted_data).decode()
@@ -41,7 +40,7 @@ def decrypt(encryption, data, iv):
     print("Decrypting... " , data)
 
     if (encryption == "aes"):
-        aes = myAES(DES_KEY, data, iv)
+        aes = myAES(AES_KEY, data, iv)
         decrypted_data = aes.decrypt()
 
     elif (encryption == "des"):
@@ -53,6 +52,14 @@ def decrypt(encryption, data, iv):
         decrypted_data = rc4.decrypt()
 
     else:
-        raise Exception("Unknown encryption")
+        raise ValueError("Unknown encryption method")
 
     return decrypted_data.decode()
+
+if __name__ == '__main__':
+    data = "hello from other side"
+    encrypted_data, iv = encrypt('aes', data)
+    print("Encrypted data: " , encrypted_data)
+    print("IV: " , iv)
+    decrypted_data = decrypt('aes', encrypted_data, iv)
+    print("Decrypted data: " , decrypted_data)

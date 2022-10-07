@@ -23,11 +23,10 @@ if __name__ == '__main__':
     key = b'kuncikuadalahini'
     data = b'hello from other side hallo hi'
     aes=myAES(key,data)
-    chipertext,iv=aes.encrypt()
+    chipertext, iv=aes.encrypt()
     iv = b64encode(iv).decode('utf-8')
     chipertext = b64encode(chipertext).decode('utf-8')
     aes=myAES(key,b64decode(chipertext),b64decode(iv))
     plaintext=aes.decrypt()
     print(plaintext)
-
-    
+    print(chipertext)
