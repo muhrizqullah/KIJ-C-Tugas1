@@ -2,15 +2,7 @@ import os
 import base64
 from base64 import b64decode, b64encode
 from glob import glob
-from client import encrypt
-from des import myDES
-from aes import myAES
-from rc4 import myRC4
-
-DES_KEY = b'inikunci'
-AES_KEY = b'kuncikuadalahini'
-RC4_KEY = b'kuncikuadatiga'
-DEFAULT_ENCRYPTION = "rc4"
+from encrypt_decrypt import encrypt, decrypt
 
 class FileInterface:
     def __init__(self):
@@ -25,6 +17,8 @@ class FileInterface:
 
     def get(self, params=[]):
         filename = params[0]
+        encryption = params[1]
+
         if (filename == ''):
             return None
 
@@ -32,21 +26,21 @@ class FileInterface:
         with open(filename, 'rb') as fp:
             data = base64.b64encode(fp.read()).decode()
 
-        data, iv = encrypt(DEFAULT_ENCRYPTION, data)
+        data, iv = encrypt(encryption, data)
 
         return dict(status='OK', filename=filename, data=data, iv=iv)
 
     def post(self, params=[]):
-        print(params, len(params))
         filename = params[0]
         data = params[1]
         encryption = params[2]
+        
         if len(params) > 3:
             iv = params[3]
         else:
             iv = b''
 
-        data = self.decrypt(encryption, data, iv)
+        data = decrypt(encryption, data, iv)
 
         with open(filename, 'xb') as fp:
             fp.write(base64.b64decode(data))
@@ -59,47 +53,6 @@ class FileInterface:
         os.remove(filename)
 
         return dict(status='OK', data=f'{filename} deleted')
-
-    def encrypt(self, encryption, data):
-        encrypted_data = ""
-        iv = b''
-        data = data.encode()
-        print("Encrypting... " , data)
-
-        if (encryption == "aes"):
-            aes = myAES(AES_KEY, data.decode())
-            encrypted_data,iv = aes.encrypt()
-
-        elif (encryption == "des"):
-            des = myDES(DES_KEY, data)
-            encrypted_data, iv = des.encrypt()
-
-        elif (encryption == "rc4"):
-            rc4 = myRC4(RC4_KEY, data)
-            encrypted_data = rc4.encrypt()
-
-        iv = b64encode(iv).decode()
-        encrypted_data = b64encode(encrypted_data).decode()
-        return encrypted_data, iv
-
-    def decrypt(self, encryption, data, iv):
-        decrypted_data = ""
-        iv = b64decode(iv)
-        data = b64decode(data)
-
-        if (encryption == "aes"):
-            aes = myAES(DES_KEY, data, iv)
-            decrypted_data = aes.decrypt()
-
-        elif (encryption == "des"):
-            des = myDES(DES_KEY, data, iv)
-            decrypted_data = des.decrypt()
-
-        elif (encryption == "rc4"):
-            rc4 = myRC4(RC4_KEY, data)
-            decrypted_data = rc4.decrypt()
-
-        return decrypted_data.decode()
 
 
 if __name__ == '__main__':

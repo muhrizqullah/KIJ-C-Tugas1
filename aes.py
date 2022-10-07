@@ -6,10 +6,10 @@ import json
 
 class myAES:
     def __init__(self,key,data, iv = None, mode = AES.MODE_CBC):
-       self.key=key
-       self.data=data
-       self.e_cipher = AES.new(self.key,mode,iv)
-       self.iv=iv
+        self.key=key
+        self.data=data
+        self.e_cipher = AES.new(self.key,mode,iv)
+        self.iv=iv
 
     def encrypt(self):
         chipertext = self.e_cipher.encrypt(pad(self.data, AES.block_size))

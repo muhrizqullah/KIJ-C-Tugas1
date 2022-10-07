@@ -6,10 +6,10 @@ import json
 
 class myAES:
     def __init__(self,key,data):
-       self.key=key
-       self.data=data
-       self.e_cipher = AES.new(self.key, AES.MODE_CBC)
-       self.iv=None
+        self.key=key
+        self.data=data
+        self.e_cipher = AES.new(self.key, AES.MODE_CBC)
+        self.iv=None
 
     def encrypt(self):
         e_data = self.e_cipher.encrypt(pad(self.data, AES.block_size))
