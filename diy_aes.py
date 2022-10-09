@@ -1,7 +1,4 @@
-from operator import le
-from traceback import print_tb
-from turtle import st
-
+import random
 
 S_BOX = (
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
@@ -48,7 +45,6 @@ R_CON = (
 
 # Lookup table for multiplication
 # ref: https://en.wikipedia.org/wiki/Rijndael_MixColumns
-
 MUL_2 = (
     0x00, 0x02, 0x04, 0x06, 0x08, 0x0a, 0x0c, 0x0e, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e,
     0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2e, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a, 0x3c, 0x3e,
@@ -185,7 +181,7 @@ class DiyAes(object):
                 temp = self.__sub_word(temp)
                 temp[0] ^= R_CON[i // 4]
                 
-            temp = self.__xor_2_words(self.round_keys[-4], temp)
+            temp = self.__xor_bytes(self.round_keys[-4], temp)
             self.round_keys.append(temp)
 
     def __sub_word(self, word):
@@ -194,7 +190,7 @@ class DiyAes(object):
     def __rot_word(self, word, n=1):
         return word[n:] + word[:n]
 
-    def __xor_2_words(self, a, b):
+    def __xor_bytes(self, a, b):
         return [a[i] ^ b[i] for i in range(len(a))]
 
     def __bytes_to_matrix(self, text):
@@ -205,7 +201,7 @@ class DiyAes(object):
 
     def __add_round_key(self, state, round_key):
         for i in range(4):
-            state[i] = self.__xor_2_words(state[i], round_key[i])
+            state[i] = self.__xor_bytes(state[i], round_key[i])
 
     def __sub_bytes(self, state):
         for i in range(len(state)):
@@ -247,10 +243,7 @@ class DiyAes(object):
         state[0][2], state[1][2], state[2][2], state[3][2] = state[2][2], state[3][2], state[0][2], state[1][2]
         state[0][3], state[1][3], state[2][3], state[3][3] = state[1][3], state[2][3], state[3][3], state[0][3]
 
-    def __encrypt_block(self, data):
-        if len(data) != 16:
-            raise ValueError('Data must be 16 bytes long')
-            
+    def __encrypt_block(self, data):            
         state = self.__bytes_to_matrix(data)
 
         self.__add_round_key(state, self.round_keys[:4])
@@ -268,9 +261,6 @@ class DiyAes(object):
         return self.__matrix_to_bytes(state)
 
     def __decrypt_block(self, data):
-        if len(data) != 16:
-            raise ValueError('Data must be 16 bytes long')
-
         state = self.__bytes_to_matrix(data)
 
         self.__add_round_key(state, self.round_keys[40:])
@@ -287,8 +277,59 @@ class DiyAes(object):
 
         return self.__matrix_to_bytes(state)
 
+    # PKCS#7 padding
+    # ref: https://stackoverflow.com/a/54166852/18277301
+    def __pad(self, data):
+        pad_len = 16 - len(data) % 16
+
+        return data + bytes([pad_len] * pad_len)
+
+    def __unpad(self, data):
+        pad_len = data[-1]
+
+        return data[:-pad_len]
+
+    def __split_blocks(self, data):
+        return [data[i:i+16] for i in range(0, len(data), 16)]
+
+    def encrypt_cbc(self, data):
+        data = self.__pad(data)
+        
+        plaintext = self.__split_blocks(data)
+        iv = random.randbytes(16)
+        ciphertext = bytearray()
+        previous = iv
+
+        for i in plaintext:
+            temp = bytes(self.__xor_bytes(i, previous))
+            temp = self.__encrypt_block(temp)
+            ciphertext.extend(temp)
+
+            previous = temp
+
+        return bytes(ciphertext), iv
+
+    def decrypt_cbc(self, data, iv):
+        ciphertext = self.__split_blocks(data)
+        plaintext = bytearray()
+        previous = iv
+
+        for i in ciphertext:
+            temp = self.__decrypt_block(i)
+            temp = bytes(self.__xor_bytes(temp, previous))
+            plaintext.extend(temp)
+            previous = i
+
+        return self.__unpad(bytes(plaintext))
+
 if __name__ == '__main__':
     key = 0x000102030405060708090a0b0c0d0e0f.to_bytes(16 , 'big')
     aes = DiyAes(key)
 
-    data = 0x00112233445566778899aabbccddeeff.to_bytes(16, 'big')
+    data = b"Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis rem atque magnam vero nostrum ea ipsum similique minus ipsam dolores laudantium, possimus, commodi officiis ab in eaque provident voluptas sunt."
+
+    ciphertext, iv = aes.encrypt_cbc(data)
+    print()
+    print(ciphertext)
+    print(iv)
+    print(aes.decrypt_cbc(ciphertext, iv))
