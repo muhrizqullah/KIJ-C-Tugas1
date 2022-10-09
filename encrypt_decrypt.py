@@ -2,6 +2,7 @@ from base64 import b64decode, b64encode
 from aes import myAES
 from des import myDES
 from rc4 import myRC4
+from diy_aes import DiyAes
 
 import time
 
@@ -29,6 +30,10 @@ def encrypt(encryption, data):
     elif (encryption == "rc4"):
         rc4 = myRC4(RC4_KEY, data)
         encrypted_data = rc4.encrypt()
+
+    elif (encryption == "diy_aes"):
+        aes = DiyAes(AES_KEY)
+        encrypted_data, iv = aes.encrypt_cbc(data)
 
     else:
         raise ValueError("Unknown encryption method")
@@ -60,6 +65,10 @@ def decrypt(encryption, data, iv):
         rc4 = myRC4(RC4_KEY, data)
         decrypted_data = rc4.decrypt()
 
+    elif (encryption == "diy_aes"):
+        aes = DiyAes(AES_KEY)
+        decrypted_data = aes.decrypt_cbc(data, iv)
+
     else:
         raise ValueError("Unknown encryption method")
 
@@ -90,4 +99,11 @@ if __name__ == '__main__':
     print("Encrypted data: " , encrypted_data)
     print("IV: " , iv)
     decrypted_data = decrypt('rc4', encrypted_data, iv)
+    print("Decrypted data: " , decrypted_data)
+
+    print("\nDIY AES")
+    encrypted_data, iv = encrypt('diy_aes', data)
+    print("Encrypted data: " , encrypted_data)
+    print("IV: " , iv)
+    decrypted_data = decrypt('diy_aes', encrypted_data, iv)
     print("Decrypted data: " , decrypted_data)

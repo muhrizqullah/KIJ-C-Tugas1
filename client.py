@@ -138,8 +138,9 @@ if __name__ == '__main__':
     print("- download <encryption> <filename>")
     print("- upload <encryption> <filename>")
     print("- delete <filename>")
-    print("Note: surround filename with double quotes if it contains spaces")
-    print("Note2: encryption can either be 'aes', 'des', or 'rc4'.")
+    print("\nNote:")
+    print("- surround filename with double quotes if it contains spaces")
+    print("- encryption can either be 'aes', 'des', 'rc4', or 'diy_aes'")
 
     try:
         while True:
