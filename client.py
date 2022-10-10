@@ -57,7 +57,7 @@ def remote_get(encryption, filename):
         data = base64.b64decode(result['data'])
         iv = base64.b64decode(result['iv'])
         
-        data = decrypt(encryption, data, iv)
+        data = decrypt(encryption, data, iv, True)
 
         with open(new_filename, 'wb') as fp:
             fp.write(data)
@@ -80,7 +80,7 @@ def remote_post(encryption, filename):
     if " " in filename:
         filename = f'"{filename}"'
 
-    data, iv = encrypt(encryption, data)
+    data, iv = encrypt(encryption, data, True)
     data = base64.b64encode(data).decode()
     iv = base64.b64encode(iv).decode()
 

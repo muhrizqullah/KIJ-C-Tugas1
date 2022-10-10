@@ -11,7 +11,7 @@ AES_KEY = b'kuncikuadalahini'
 RC4_KEY = b'kuncikuadatiga'
 DEFAULT_ENCRYPTION = "rc4"
 
-def encrypt(encryption, data):
+def encrypt(encryption, data, show_output=False):
     encrypted_data = b''
     iv = b''
     # print("Encrypting... " , data)
@@ -38,11 +38,15 @@ def encrypt(encryption, data):
         raise ValueError("Unknown encryption method")
 
     elapsed = time.time() - start
-    print("Time taken for encryption: ", elapsed * 1000, "ms")
+    
+    if show_output:
+        print("Time taken for encryption:", elapsed * 1000, "ms")
+        print("Plaintext: ", data)
+        print("Ciphertext: ", encrypted_data)
 
     return encrypted_data, iv
 
-def decrypt(encryption, data, iv):
+def decrypt(encryption, data, iv, show_output=False):
     decrypted_data = ""
     # print("Decrypting... " , data)
     
@@ -68,7 +72,11 @@ def decrypt(encryption, data, iv):
         raise ValueError("Unknown encryption method")
 
     elapsed = time.time() - start
-    print("Time taken for decryption: ", elapsed * 1000, "ms")
+        
+    if show_output:
+        print("Time taken for decryption:", elapsed * 1000, "ms")
+        print("Ciphertext: ", data)
+        print("Plaintext: ", decrypted_data)
 
     return decrypted_data
 
