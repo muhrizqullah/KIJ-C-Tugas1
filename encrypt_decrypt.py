@@ -12,9 +12,8 @@ RC4_KEY = b'kuncikuadatiga'
 DEFAULT_ENCRYPTION = "rc4"
 
 def encrypt(encryption, data):
-    encrypted_data = ""
+    encrypted_data = b''
     iv = b''
-    data = data.encode()
     # print("Encrypting... " , data)
 
     start = time.time()
@@ -41,14 +40,10 @@ def encrypt(encryption, data):
     elapsed = time.time() - start
     print("Time taken for encryption: ", elapsed * 1000, "ms")
 
-    iv = b64encode(iv).decode()
-    encrypted_data = b64encode(encrypted_data).decode()
     return encrypted_data, iv
 
 def decrypt(encryption, data, iv):
     decrypted_data = ""
-    iv = b64decode(iv)
-    data = b64decode(data)
     # print("Decrypting... " , data)
     
     start = time.time()
@@ -75,10 +70,10 @@ def decrypt(encryption, data, iv):
     elapsed = time.time() - start
     print("Time taken for decryption: ", elapsed * 1000, "ms")
 
-    return decrypted_data.decode()
+    return decrypted_data
 
 if __name__ == '__main__':
-    data = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis rem atque magnam vero nostrum ea ipsum similique minus ipsam dolores laudantium, possimus, commodi officiis ab in eaque provident voluptas sunt."
+    data = b"Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis rem atque magnam vero nostrum ea ipsum similique minus ipsam dolores laudantium, possimus, commodi officiis ab in eaque provident voluptas sunt."
 
     print("AES")
     encrypted_data, iv = encrypt('aes', data)

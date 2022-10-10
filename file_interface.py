@@ -24,26 +24,28 @@ class FileInterface:
 
         data = ""
         with open(filename, 'rb') as fp:
-            data = base64.b64encode(fp.read()).decode()
+            data = fp.read()
 
         data, iv = encrypt(encryption, data)
+        data = base64.b64encode(data).decode()
+        iv = base64.b64encode(iv).decode()
 
         return dict(status='OK', filename=filename, data=data, iv=iv)
 
     def post(self, params=[]):
         filename = params[0]
-        data = params[1]
+        data = base64.b64decode(params[1])
         encryption = params[2]
         
         if len(params) > 3:
-            iv = params[3]
+            iv = base64.b64decode(params[3])
         else:
             iv = b''
 
         data = decrypt(encryption, data, iv)
 
         with open(filename, 'xb') as fp:
-            fp.write(base64.b64decode(data))
+            fp.write(data)
 
         return dict(status='OK', data=filename)
 

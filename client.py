@@ -54,8 +54,10 @@ def remote_get(encryption, filename):
     if not remote_error(result):
         new_filename = result['filename']
         
-        data = decrypt(encryption, result['data'], result['iv'])
-        data = base64.b64decode(data)
+        data = base64.b64decode(result['data'])
+        iv = base64.b64decode(result['iv'])
+        
+        data = decrypt(encryption, data, iv)
 
         with open(new_filename, 'wb') as fp:
             fp.write(data)
@@ -70,7 +72,7 @@ def remote_post(encryption, filename):
     data = ""
     try:
         with open(filename, 'rb') as fp:
-            data = base64.b64encode(fp.read()).decode('utf-8')
+            data = fp.read()
     except FileNotFoundError:
         print("Error: file not found")
         return False
@@ -79,6 +81,8 @@ def remote_post(encryption, filename):
         filename = f'"{filename}"'
 
     data, iv = encrypt(encryption, data)
+    data = base64.b64encode(data).decode()
+    iv = base64.b64encode(iv).decode()
 
     command_str = f"POST {filename} {data} {encryption} {iv}"
     result = send_command(command_str)
