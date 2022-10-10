@@ -3,7 +3,7 @@ import json
 import base64
 import shlex
 from encrypt_decrypt import encrypt, decrypt
-
+import sys
 
 SERVER_ADDRESS = ('127.0.0.1', 6666)
 BUFFER_SIZE = 4096
@@ -130,21 +130,30 @@ def handle_command(command):
             print("Error: unknown command")
     except IndexError:
         print(f"Error: Some parameters are missing")
+    except Exception as e:
+        print(f"Error: {e}")
 
-
-if __name__ == '__main__':
+def interactive():
     print("Command list:")
     print("- list")
     print("- download <encryption> <filename>")
     print("- upload <encryption> <filename>")
     print("- delete <filename>")
-    print("\nNote:")
-    print("- surround filename with double quotes if it contains spaces")
+    print("\nNotes:")
+    print("- surround filename with double quotes if it contains spaces, e.g. \"file name.txt\"")
     print("- encryption can either be 'aes', 'des', 'rc4', or 'diy_aes'")
+    print("- you can also send a single command as an argument to this program, e.g. 'python3 client.py upload aes \"file name.txt\"'")
 
     try:
         while True:
             print("\nEnter command (^C to exit):")
             handle_command(input())
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt):
         print("\nProgram exited.")
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        command = " ".join([arg if " " not in arg else f'"{arg}"' for arg in sys.argv[1:]])
+        handle_command(command)
+    else:
+        interactive()
