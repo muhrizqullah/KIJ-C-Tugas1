@@ -14,23 +14,20 @@ def send_command(command_str):
     sock.connect(SERVER_ADDRESS)
 
     command_str += "\r\n\r\n"
-
-    try:
-        sock.sendall(command_str.encode())
-        data_received = ""
-        while True:
-            data = sock.recv(BUFFER_SIZE)
-            if data:
-                data_received += data.decode()
-                if "\r\n\r\n" in data_received:
-                    break
-            else:
+    
+    sock.sendall(command_str.encode())
+    data_received = ""
+    while True:
+        data = sock.recv(BUFFER_SIZE)
+        if data:
+            data_received += data.decode()
+            if "\r\n\r\n" in data_received:
                 break
+        else:
+            break
 
-        hasil = json.loads(data_received)
-        return hasil
-    except Exception:
-        return False
+    hasil = json.loads(data_received)
+    return hasil
 
 
 def remote_list():
@@ -40,9 +37,6 @@ def remote_list():
         print("Files: ")
         for filename in result['data']:
             print(f"- {filename}")
-        return True
-    else:
-        return False
 
 
 def remote_get(encryption, filename):
@@ -63,9 +57,6 @@ def remote_get(encryption, filename):
             fp.write(data)
 
         print(f"{new_filename} successfully downloaded")
-        return True
-    else:
-        return False
 
 
 def remote_post(encryption, filename):
@@ -75,7 +66,7 @@ def remote_post(encryption, filename):
             data = fp.read()
     except FileNotFoundError:
         print("Error: file not found")
-        return False
+        return
 
     if " " in filename:
         filename = f'"{filename}"'
@@ -89,9 +80,6 @@ def remote_post(encryption, filename):
 
     if not remote_error(result):
         print("File successfully uploaded")
-        return True
-    else:
-        return False
 
 
 def remote_delete(filename):
@@ -103,9 +91,6 @@ def remote_delete(filename):
 
     if not remote_error(result):
         print("File successfully deleted")
-        return True
-    else:
-        return False
 
 
 def remote_error(result):
