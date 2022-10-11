@@ -14,7 +14,6 @@ DEFAULT_ENCRYPTION = "rc4"
 def encrypt(encryption, data, show_output=False):
     encrypted_data = b''
     iv = b''
-    # print("Encrypting... " , data)
 
     start = time.time()
 
@@ -41,14 +40,15 @@ def encrypt(encryption, data, show_output=False):
     
     if show_output:
         print("Time taken for encryption:", elapsed * 1000, "ms")
-        print("Plaintext: ", data)
-        print("Ciphertext: ", encrypted_data)
+        print("Plaintext:", data)
+        print("Plaintext Hex:", data.hex())
+        print("Ciphertext:", encrypted_data)
+        print("Ciphertext Hex:", encrypted_data.hex())
 
     return encrypted_data, iv
 
 def decrypt(encryption, data, iv, show_output=False):
     decrypted_data = ""
-    # print("Decrypting... " , data)
     
     start = time.time()
 
@@ -75,8 +75,10 @@ def decrypt(encryption, data, iv, show_output=False):
         
     if show_output:
         print("Time taken for decryption:", elapsed * 1000, "ms")
-        print("Ciphertext: ", data)
-        print("Plaintext: ", decrypted_data)
+        print("Ciphertext:", data)
+        print("Ciphertext Hex:", data.hex())
+        print("Plaintext:", decrypted_data)
+        print("Plaintext Hex:", decrypted_data.hex())
 
     return decrypted_data
 
