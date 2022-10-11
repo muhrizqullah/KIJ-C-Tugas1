@@ -1,6 +1,6 @@
 #!/bin/bash
 
-encryptionMethods=("aes" "des" "rc4" "diy_aes")
+encryptionMethods=("aes" "des" "rc4" "diy_aes", "diy_des")
 files=("test-short" "test-long")
 count=10
 csv="run-output.csv"

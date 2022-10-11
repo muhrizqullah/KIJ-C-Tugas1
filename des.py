@@ -24,25 +24,14 @@ if __name__ == '__main__':
     key = b'-8B key-'
 
     str = "halo dunia apa kabar"
-    print("str: ", str)
-
     byte = str.encode()
-    print("byte: ", byte)
+    print("\nplaintext: \n", byte)
 
     des = myDES(key, byte)
     enc, iv = des.encrypt()
-    print("iv: ", iv)
-    print("enc: ", enc)
+    print("\niv: \n", iv)
+    print("\nciphertext: \n", enc)
 
-    b64sen = b64encode(enc).decode()
-    print("b64sent: ", b64sen)
-
-    byterec = b64decode(b64sen)
-    print("byterec = enc: ", byterec)
-
-    des2 = myDES(key, byterec, iv)
+    des2 = myDES(key, enc, iv)
     dec = des2.decrypt()
-    print("dec = byte: ", dec)
-
-    b64 = dec.decode()
-    print(b64)
+    print("\ndecrypted:\n", dec)

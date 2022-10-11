@@ -3,6 +3,7 @@ from aes import myAES
 from des import myDES
 from rc4 import myRC4
 from diy_aes import DiyAes
+from diy_des import DiyDes
 
 import time
 
@@ -32,6 +33,10 @@ def encrypt(encryption, data, show_output=False):
     elif (encryption == "diy_aes"):
         aes = DiyAes(AES_KEY)
         encrypted_data, iv = aes.encrypt_cbc(data)
+
+    elif (encryption == "diy_des"):
+        des = DiyDes(DES_KEY)
+        encrypted_data, iv = des.encrypt_cbc(data)
 
     else:
         raise ValueError("Unknown encryption method")
@@ -67,6 +72,10 @@ def decrypt(encryption, data, iv, show_output=False):
     elif (encryption == "diy_aes"):
         aes = DiyAes(AES_KEY)
         decrypted_data = aes.decrypt_cbc(data, iv)
+
+    elif (encryption == "diy_des"):
+        des = DiyDes(DES_KEY)
+        decrypted_data, iv = des.encrypt_cbc(data)
 
     else:
         raise ValueError("Unknown encryption method")
@@ -111,4 +120,11 @@ if __name__ == '__main__':
     print("Encrypted data: " , encrypted_data)
     print("IV: " , iv)
     decrypted_data = decrypt('diy_aes', encrypted_data, iv)
+    print("Decrypted data: " , decrypted_data)
+
+    print("\nDIY DES")
+    encrypted_data, iv = encrypt('diy_des', data)
+    print("Encrypted data: " , encrypted_data)
+    print("IV: " , iv)
+    decrypted_data = decrypt('diy_des', encrypted_data, iv)
     print("Decrypted data: " , decrypted_data)
