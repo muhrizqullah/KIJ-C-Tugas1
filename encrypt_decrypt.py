@@ -75,7 +75,7 @@ def decrypt(encryption, data, iv, show_output=False):
 
     elif (encryption == "diy_des"):
         des = DiyDes(DES_KEY)
-        decrypted_data, iv = des.encrypt_cbc(data)
+        decrypted_data, iv = des.decrypt_cbc(data)
 
     else:
         raise ValueError("Unknown encryption method")
