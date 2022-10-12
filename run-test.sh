@@ -1,9 +1,9 @@
 #!/bin/bash
 
 encryptionMethods=("aes" "des" "rc4" "diy_aes" "diy_des")
-files=("test-short" "test-long")
-count=10
-csv="run-output.csv"
+files=("final.txt" "quote.jpg" "teaser.mp4")
+count=1
+csv="run-output-demo.csv"
 
 echo "no,fileName,encryptionMethod,encryptionTime,decryptionTime" > $csv
 
@@ -24,7 +24,7 @@ for i in "${encryptionMethods[@]}"; do
 
             echo "$k,$j,$i,$encTime,$decTime" >> $csv
 
-            rm "files/$j"
+            # rm "files/$j"
         done
     done
 done

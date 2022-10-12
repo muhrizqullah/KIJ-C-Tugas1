@@ -149,7 +149,7 @@ class DiyDes(object):
     def __generate_internal_key(self):
         key = [0] * 56
         for i in range(56):
-            key[i] = self.key[PC1_TABLE[i] // 8] >> (7 - (PC1_TABLE[i] % 8)) & 1
+            key[i] = self.key[PC1_TABLE[i] - 1]
             
         left = key[:28]
         right = key[28:]
@@ -198,8 +198,6 @@ class DiyDes(object):
         return [a[i] ^ b[i] for i in range(len(a))]
 
     def __sbox(self, input):
-        
-
         output = [0] * 32
         for i in range(8):
             row = input[i * 6] * 2 + input[i * 6 + 5]
