@@ -1,9 +1,9 @@
 #!/bin/bash
 
-encryptionMethods=("aes" "des" "rc4" "diy_aes" "diy_des")
+encryptionMethods=("diy_des")
 files=("final.txt" "quote.jpg" "teaser.mp4")
 count=1
-csv="run-output-demo.csv"
+csv="run-output-demo-diy-des.csv"
 
 echo "no,fileName,encryptionMethod,encryptionTime,decryptionTime" > $csv
 
